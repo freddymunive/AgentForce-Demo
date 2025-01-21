@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>62.0</apiVersion>
+    <decisions>
+        <name>user_Exists</name>
+        <label>user Exists</label>
+        <locationX>182</locationX>
+        <locationY>242</locationY>
+        <defaultConnector>
+            <targetReference>Create_Event_without_Case</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Case_Owner.OwnerId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_new_Event</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
     <description>Let users create events on Calendar.</description>
     <environments>Default</environments>
     <interviewLabel>Oktana - Create Event {!$Flow.CurrentDateTime}</interviewLabel>
@@ -25,10 +50,10 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordCreates>
-        <name>Create_new_Event</name>
-        <label>Create new Event</label>
-        <locationX>176</locationX>
-        <locationY>134</locationY>
+        <name>Create_Event_without_Case</name>
+        <label>Create Event without Case</label>
+        <locationX>314</locationX>
+        <locationY>350</locationY>
         <connector>
             <targetReference>Get_Event_Record</targetReference>
         </connector>
@@ -56,6 +81,41 @@
                 <elementReference>EventName</elementReference>
             </value>
         </inputAssignments>
+        <object>Event</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_new_Event</name>
+        <label>Create new Event</label>
+        <locationX>50</locationX>
+        <locationY>350</locationY>
+        <connector>
+            <targetReference>Get_Event_Record</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>EndDateTime</field>
+            <value>
+                <elementReference>EndDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>Get_Case_Owner.OwnerId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StartDateTime</field>
+            <value>
+                <elementReference>StartDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <elementReference>EventName</elementReference>
+            </value>
+        </inputAssignments>
         <inputAssignments>
             <field>WhatId</field>
             <value>
@@ -66,17 +126,47 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordLookups>
-        <name>Get_Event_Record</name>
-        <label>Get Event Record</label>
-        <locationX>176</locationX>
-        <locationY>242</locationY>
+        <name>Get_Case_Owner</name>
+        <label>Get Case Owner</label>
+        <locationX>182</locationX>
+        <locationY>134</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>user_Exists</targetReference>
+        </connector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
+                <elementReference>caseRecord.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Case</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>OwnerId</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Event_Record</name>
+        <label>Get Event Record</label>
+        <locationX>182</locationX>
+        <locationY>542</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
                 <elementReference>Create_new_Event</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Create_Event_without_Case</elementReference>
             </value>
         </filters>
         <object>Event</object>
@@ -88,10 +178,10 @@
         <queriedFields>OwnerId</queriedFields>
     </recordLookups>
     <start>
-        <locationX>50</locationX>
+        <locationX>56</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Create_new_Event</targetReference>
+            <targetReference>Get_Case_Owner</targetReference>
         </connector>
     </start>
     <status>Active</status>
@@ -131,5 +221,15 @@
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>userId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <elementReference>$User.Id</elementReference>
+        </value>
     </variables>
 </Flow>
