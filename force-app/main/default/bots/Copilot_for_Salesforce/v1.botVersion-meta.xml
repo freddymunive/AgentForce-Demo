@@ -46,6 +46,8 @@
         <dialog>Rich_Content_Error_Handling</dialog>
         <type>ErrorHandling</type>
     </conversationSystemDialogs>
+    <copilotPrimaryLanguage>en_US</copilotPrimaryLanguage>
+    <copilotSecondaryLanguages>es,es_MX</copilotSecondaryLanguages>
     <entryDialog>Welcome</entryDialog>
     <intentDisambiguationEnabled>false</intentDisambiguationEnabled>
     <intentV3Enabled>false</intentV3Enabled>

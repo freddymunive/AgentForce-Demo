@@ -28,6 +28,11 @@
     </decisions>
     <description>Let users create events on Calendar.</description>
     <environments>Default</environments>
+    <formulas>
+        <name>defaultEndDateTime</name>
+        <dataType>DateTime</dataType>
+        <expression>{!StartDateTime} + (1/24)</expression>
+    </formulas>
     <interviewLabel>Oktana - Create Event {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Oktana - Create Event</label>
     <processMetadataValues>
@@ -199,6 +204,9 @@
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
+        <value>
+            <elementReference>defaultEndDateTime</elementReference>
+        </value>
     </variables>
     <variables>
         <name>EventName</name>

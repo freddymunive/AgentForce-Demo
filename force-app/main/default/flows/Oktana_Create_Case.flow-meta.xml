@@ -45,6 +45,24 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Origin</field>
+            <value>
+                <stringValue>Chat</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>technicianInput.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <elementReference>priorityInput</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Subject</field>
             <value>
                 <elementReference>SubjectVar</elementReference>
@@ -69,13 +87,14 @@
         </filters>
         <object>Case</object>
         <outputReference>caseRecord</outputReference>
-        <queriedFields>Id</queriedFields>
         <queriedFields>Subject</queriedFields>
         <queriedFields>Description</queriedFields>
         <queriedFields>ContactEmail</queriedFields>
         <queriedFields>CreatedDate</queriedFields>
         <queriedFields>Status</queriedFields>
         <queriedFields>CaseNumber</queriedFields>
+        <queriedFields>Priority</queriedFields>
+        <queriedFields>OwnerId</queriedFields>
     </recordLookups>
     <start>
         <locationX>50</locationX>
@@ -109,10 +128,28 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
+        <name>priorityInput</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Medium</stringValue>
+        </value>
+    </variables>
+    <variables>
         <name>SubjectVar</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>technicianInput</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>User</objectType>
     </variables>
 </Flow>
